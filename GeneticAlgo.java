@@ -1,8 +1,11 @@
+import java.util.Random;
+
 public class GeneticAlgo {
-	/* GA parameters */
+    /* GA parameters */
     private static final double mutationRate = 0.015;
     private static final int tournamentSize = 2;
     private static final boolean elitism = true;
+    private static final Random random = new Random();
 
     // Evolves a population over one generation
     public static Population evolvePopulation(Population pop) {
@@ -42,31 +45,30 @@ public class GeneticAlgo {
         Route child = new Route();
 
         // Get start and end sub tour positions for parent1's tour
-        int startPos = (int) (Math.random() * parent1.getRoute().size());
-        int endPos = (int) (Math.random() * parent1.getRoute().size());
+        int startPos = random.nextInt(parent1.getRoute().size());
+        int endPos = random.nextInt(parent1.getRoute().size());
+
+        // Ensure startPos is less than endPos
+        if (startPos > endPos) {
+            int temp = startPos;
+            startPos = endPos;
+            endPos = temp;
+        }
 
         // Loop and add the sub tour from parent1 to our child
-        for (int i = 0; i < child.getRoute().size(); i++) {
-            // If our start position is less than the end position
-            if (startPos < endPos && i > startPos && i < endPos) {
-                child.setCityAtindex(parent1.getCityAt(i), i);
-            } // If our start position is larger
-            else if (startPos > endPos) {
-                if (!(i < startPos && i > endPos)) {
-                    child.setCityAtindex(parent1.getCityAt(i), i);
-                }
-            }
+        for (int i = startPos; i < endPos; i++) {
+            child.setCityAtIndex(parent1.getCityAtIndex(i), i);
         }
 
         // Loop through parent2's city tour
         for (int i = 0; i < parent2.getRoute().size(); i++) {
             // If child doesn't have the city add it
-            if (!child.getRoute().contains(parent2.getCityAt(i))) {
+            if (!child.getRoute().contains(parent2.getCityAtIndex(i))) {
                 // Loop to find a spare position in the child's tour
                 for (int j = 0; j < child.getRoute().size(); j++) {
                     // Spare position found, add city
-                    if (child.getCityAt(j) == null) {
-                        child.setCityAtindex(parent2.getCityAt(i), j);
+                    if (child.getCityAtIndex(j) == null) {
+                        child.setCityAtIndex(parent2.getCityAtIndex(i), j);
                         break;
                     }
                 }
@@ -78,19 +80,19 @@ public class GeneticAlgo {
     // Mutate a tour using swap mutation
     private static void mutate(Route tour) {
         // Loop through tour cities
-        for(int tourPos1=0; tourPos1 < tour.getRoute().size(); tourPos1++){
+        for (int tourPos1 = 0; tourPos1 < tour.getRoute().size(); tourPos1++) {
             // Apply mutation rate
-            if(Math.random() < mutationRate){
+            if (random.nextDouble() < mutationRate) {
                 // Get a second random position in the tour
-                int tourPos2 = (int) (tour.getRoute().size() * Math.random());
+                int tourPos2 = random.nextInt(tour.getRoute().size());
 
                 // Get the cities at target position in tour
-                City city1 = tour.getCityAt(tourPos1);
-                City city2 = tour.getCityAt(tourPos2);
+                City city1 = tour.getCityAtIndex(tourPos1);
+                City city2 = tour.getCityAtIndex(tourPos2);
 
                 // Swap them around
-                tour.setCityAtindex(city1, tourPos2);
-                tour.setCityAtindex(city2, tourPos1);
+                tour.setCityAtIndex(city2, tourPos1);
+                tour.setCityAtIndex(city1, tourPos2);
             }
         }
     }
@@ -102,11 +104,10 @@ public class GeneticAlgo {
         // For each place in the tournament get a random candidate tour and
         // add it
         for (int i = 0; i < tournamentSize; i++) {
-            int randomId = (int) (Math.random() * pop.getRoutes().length);
+            int randomId = random.nextInt(pop.getRoutes().length);
             tournament.saveRoute(i, pop.getRoute(randomId));
         }
         // Get the fittest tour
-        Route fittest = tournament.getFittest();
-        return fittest;
+        return tournament.getFittest();
     }
 }

@@ -1,17 +1,18 @@
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class Population {
     private Route[] routes;
 
     public Population(int popSize, boolean init) {
         routes = new Route[popSize];
-
         if (init) {
-            Arrays.setAll(routes, i -> {
-                Route newRoute = new Route();
-                newRoute.generateIndividual();
-                return newRoute;
-            });
+            IntStream.range(0, popSize)
+                    .forEach(i -> {
+                        Route newRoute = new Route();
+                        newRoute.generateIndividual();
+                        routes[i] = newRoute;
+                    });
         }
     }
 

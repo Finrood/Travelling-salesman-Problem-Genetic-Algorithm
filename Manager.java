@@ -1,14 +1,21 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Manager {
-	private static List<City> listCities = new ArrayList<City>();
+	private static final List<City> cities = new ArrayList<>();
 
-	public static List<City> getListCities() {
-		return listCities;
+	public static List<City> getCities() {
+		return Collections.unmodifiableList(cities);
 	}
 
-	public static void setListCities(List<City> listCities) {
-		Manager.listCities = listCities;
+	public static List<City> addCity(City city) {
+		cities.add(city);
+		return cities;
+	}
+
+	public static void setCities(List<City> cities) {
+		Manager.cities.clear();
+		Manager.cities.addAll(cities);
 	}
 }

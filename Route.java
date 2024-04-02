@@ -13,44 +13,45 @@ public class Route {
 	}
 
 	public Route() {
-		IntStream.range(0, Manager.getListCities().size())
-				.forEach(i -> route.add(null));
+		this.route = new ArrayList<>(Collections.nCopies(Manager.getCities().size(), null));
 	}
 
 	public List<City> getRoute() {
 		return route;
 	}
 
-	public void setRoute(ArrayList<City> route) {
+	public void setRoute(List<City> route) {
 		this.route = route;
+		this.distance = 0;
+		this.fitness = 0;
 	}
 
 	public void generateIndividual() {
-		IntStream.range(0, Manager.getListCities().size())
-				.forEach(i -> this.setCityAtindex(Manager.getListCities().get(i), i));
+		IntStream.range(0, Manager.getCities().size())
+				.forEach(i -> this.setCityAtIndex(Manager.getCities().get(i), i));
 		Collections.shuffle(route);
 	}
 
-	public City getCityAt(int index) {
+	public City getCityAtIndex(int index) {
 		return route.get(index);
 	}
 
-	public void setCityAtindex(City c, int index) {
-		this.getRoute().set(index, c);
+	public void setCityAtIndex(City c, int index) {
+		this.route.set(index, c);
 		distance = 0;
 		fitness = 0;
 	}
 
 	public int getTotalDistance() {
 		if (distance == 0) {
-			int totalDistance = 0;
-
-			for (int i = 0; i < route.size(); i++) {
-				City from = getCityAt(i);
-				City destination = (i + 1 < route.size()) ? getCityAt(i + 1) : getCityAt(0);
-				totalDistance += from.distanceToCity(destination);
-			}
-			distance = totalDistance;
+			distance = IntStream.range(0, route.size())
+					.mapToObj(i -> {
+						City from = getCityAtIndex(i);
+						City destination = (i + 1 < route.size()) ? getCityAtIndex(i + 1) : getCityAtIndex(0);
+						return from.distanceToCity(destination);
+					})
+					.mapToInt(Double::intValue)
+					.sum();
 		}
 		return distance;
 	}
@@ -65,7 +66,7 @@ public class Route {
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder("|");
-		getRoute().forEach(city -> s.append(city).append("|"));
+		route.forEach(city -> s.append(city).append("|"));
 		return s.toString();
 	}
 }

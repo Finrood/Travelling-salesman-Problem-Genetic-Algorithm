@@ -1,14 +1,17 @@
+import java.util.Random;
+
 public class City {
 	private int x, y;
-	
+
 	public City(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public City () {
-		x = (int) (Math.random() * 200);
-		y = (int) (Math.random() * 200);
+
+	public City() {
+		final Random random = new Random();
+		this.x = random.nextInt(200);
+		this.y = random.nextInt(200);
 	}
 
 	public int getX() {
@@ -26,16 +29,13 @@ public class City {
 	public void setY(int y) {
 		this.y = y;
 	}
-	
-	public double distanceToCity (City c) {
-		int distanceX = Math.abs(this.getX() - c.getX());
-		int distanceY = Math.abs(this.getY() - c.getY());
 
-        return Math.sqrt(distanceX*distanceX + distanceY*distanceY);
+	public double distanceToCity(City c) {
+		return Math.hypot(this.getX() - c.getX(), this.getY() - c.getY());
 	}
-	
+
 	@Override
 	public String toString() {
-		return (this.getX() + "," + this.getY());
+		return this.getX() + "," + this.getY();
 	}
 }
