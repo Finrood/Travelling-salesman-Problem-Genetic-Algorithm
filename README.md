@@ -5,7 +5,7 @@
 
 ###### Made in 2019
 
-This Java project implements a solution to the Traveling Salesman Problem (TSP) using a genetic algorithm. The Traveling Salesman Problem is a classic optimization problem where the goal is to find the shortest possible route that visits a set of cities and returns to the starting city.
+This Java project implements a solution to the Traveling Salesman Problem (TSP) using a genetic algorithm. The Traveling Salesman Problem is a classic optimization problem where the goal is to find the shortest possible route that visits a set of cities.
 
 ## Algorithm Overview
 
@@ -20,3 +20,7 @@ The genetic algorithm works by evolving a population of potential solutions over
 - Mutation to introduce small changes in the offspring.
 - Elitism to preserve the best solutions across generations.
 - Visualization of the best route found.
+
+
+
+![tsp](https://github.com/Finrood/Travelling-salesman-Problem-Genetic-Algorithm/assets/66259833/aca3db44-9d4f-4e06-bb3a-43f7e83be324)
